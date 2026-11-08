@@ -1,6 +1,6 @@
 # 参加アプリ
 
-本ファイルでは、利用許可に関して参加アプリが担う処理を定めます。実効許可の判定には、[grant.md](grant.md) の手順だけを使います。引き渡しコードの消費、Cookie、ログアウト、オリジン検査は、認証サーバーの [participant-app.md](https://github.com/czbone/astro-user-webauthn2/blob/main/planning/participant-app.md) に従います。
+本ファイルでは、利用許可に関して参加アプリが担う処理を定めます。実効許可の判定には、[grant.md](grant.md) の手順だけを使います。引き渡しコードの消費、Cookie、ログアウト、オリジン検査は、認証サーバーの [participant-app.md](../participant-app.md) に従います。
 
 参加アプリは `App` と `AppGrant` を参照しますが、行の作成、既定の変更、マイグレーションは行いません。
 

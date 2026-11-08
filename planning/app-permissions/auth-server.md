@@ -55,7 +55,7 @@ ALTER TABLE "App" ADD COLUMN "defaultPermission" TEXT NULL;
 
 ## 引き渡し
 
-`GET /auth/handoff` でセッションを作成する条件のうち、権限付与の確認を実効許可の判定に置き換えます。他の条件は [multi-app-auth.md](https://github.com/czbone/astro-user-webauthn2/blob/main/planning/multi-app-auth.md) に従います。
+`GET /auth/handoff` でセッションを作成する条件のうち、権限付与の確認を実効許可の判定に置き換えます。他の条件は [multi-app-auth.md](../multi-app-auth.md) に従います。
 
 ```text
 認証サーバーのセッションを検証

@@ -1,7 +1,7 @@
 # Better Auth を使う場合との比較（2026-08-14）
 
 **日付**: 2026-08-14  
-**対象**: astro-user-webauthn プロジェクト  
+**対象**: auth-server（[npomori/auth-server](https://github.com/npomori/auth-server)）  
 **比較対象**: [Better Auth](https://www.better-auth.com/)（TypeScript 向け認証ライブラリ）
 
 ## 概要

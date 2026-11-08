@@ -1,7 +1,7 @@
 # セッション索引の寿命（2026-10-28）
 
 **日付**: 2026-10-28  
-**対象**: 認証サーバー [czbone/astro-user-webauthn2](https://github.com/czbone/astro-user-webauthn2) の `sess:user:{userId}`  
+**対象**: 認証サーバー [npomori/auth-server](https://github.com/npomori/auth-server) の `sess:user:{userId}`  
 **方法**: 認証サーバーの確定資料・実装と、このパッケージのセッション延長を突き合わせた静的確認  
 **変更**: この記録では実装を変えていない
 
@@ -34,7 +34,7 @@
 
 ## 根拠
 
-認証サーバーの [Redis](https://github.com/czbone/astro-user-webauthn2/blob/main/docs/redis.md) は、`sess:user:{userId}` の TTL を「本体に合わせて維持」とし、全失効を `SMEMBERS` から各セッションキーの `DEL` としています。
+認証サーバーの [Redis](../redis.md) は、`sess:user:{userId}` の TTL を「本体に合わせて維持」とし、全失効を `SMEMBERS` から各セッションキーの `DEL` としています。
 
 実装は `src/server/db/session.ts` です。
 

@@ -1,7 +1,7 @@
 # テストカバレッジ評価と推奨事項
 
 **日付**: 2026-08-10  
-**対象**: astro-user-webauthn プロジェクト  
+**対象**: auth-server（[npomori/auth-server](https://github.com/npomori/auth-server)）  
 **評価者**: GitHub Copilot
 
 ## 現状の評価
