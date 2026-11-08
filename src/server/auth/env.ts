@@ -9,7 +9,7 @@ function required(name: string, fallback?: string): string {
 export const authEnv = {
   appUrl: () => required('APP_URL', 'http://auth.localhost:3000'),
   rpID: () => required('WEBAUTHN_RP_ID', 'auth.localhost'),
-  rpName: () => required('WEBAUTHN_RP_NAME', 'Astro User WebAuthn'),
+  rpName: () => required('WEBAUTHN_RP_NAME', '認証サーバー'),
   origin: () => required('WEBAUTHN_ORIGIN', 'http://auth.localhost:3000'),
   appId: () => required('APP_ID', 'auth'),
   parentDomain: () => required('PARENT_DOMAIN', 'localhost').toLowerCase(),

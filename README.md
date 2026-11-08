@@ -1,4 +1,4 @@
-# Astro User WebAuthn
+# 認証サーバー
 
 リポジトリの読み方は [`AGENTS.md`](AGENTS.md)、仕様は [`docs/`](docs/README.md) です。
 
@@ -48,7 +48,7 @@ APP_URL="http://auth.localhost:3000"
 APP_ID="auth"
 PARENT_DOMAIN="localhost"
 WEBAUTHN_RP_ID="auth.localhost"
-WEBAUTHN_RP_NAME="Astro User WebAuthn"
+WEBAUTHN_RP_NAME="認証サーバー"
 WEBAUTHN_ORIGIN="http://auth.localhost:3000"
 MAIL_MODE="console"
 SEED_ADMIN_EMAIL="admin@example.com"

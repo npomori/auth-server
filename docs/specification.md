@@ -225,7 +225,7 @@ Session / Invite / Reset / Magic のトークンは、平文のまま Cookie・U
 - `REDIS_KEY_PREFIX`（任意）
 - `PARTICIPANT_REDIS_PASSWORD`（任意。設定時、プロセス起動後の最初のリクエストで参加アプリ共通の Redis ユーザー `app_participant` を用意する。未設定なら作らない。手順と `SET` を与えない理由は [redis.md](./redis.md)）
 - `SESSION_MAX_AGE_SECONDS`（任意、既定 `2592000`）
-- `WEBAUTHN_RP_ID` / `WEBAUTHN_RP_NAME` / `WEBAUTHN_ORIGIN`（開発既定は RP ID `auth.localhost`、オリジン `http://auth.localhost:3000`。RP ID は認証サーバーのホスト名）
+- `WEBAUTHN_RP_ID` / `WEBAUTHN_RP_NAME` / `WEBAUTHN_ORIGIN`（開発既定は RP ID `auth.localhost`、RP 名 `認証サーバー`、オリジン `http://auth.localhost:3000`。RP ID は認証サーバーのホスト名）
 - `APP_URL`（開発既定 `http://auth.localhost:3000`。本番では `WEBAUTHN_ORIGIN` と origin が一致すること）
 - `APP_ID`（認証サーバー自身の `App.id`。既定 `auth`）
 - `PARENT_DOMAIN`（参加アプリと認証サーバーの親。開発既定 `localhost`。参加アプリのホストは親ドメイン自身か、その直下の1ラベル。認証サーバーのホストと `WEBAUTHN_RP_ID` は直下のサブドメイン。`localhost` の頂点は参加アプリにしない）
