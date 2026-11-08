@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                  String               @id @default(uuid())
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  email               String               @unique
+  password            String
+  name                String
+  role                String
+  disabledAt          DateTime?
+  credentials         WebAuthnCredential[]
+  grants              AppGrant[]
+  roleChangesAsActor  RoleChange[]         @relation("RoleChangeActor")
+  roleChangesAsTarget RoleChange[]         @relation("RoleChangeTarget")
+}
+
+model RoleChange {
+  id        String   @id @default(uuid())
+  actorId   String
+  targetId  String
+  fromRole  String
+  toRole    String
+  success   Boolean
+  reason    String?
+  createdAt DateTime @default(now())
+  actor     User     @relation("RoleChangeActor", fields: [actorId], references: [id], onDelete: Restrict)
+  target    User     @relation("RoleChangeTarget", fields: [targetId], references: [id], onDelete: Restrict)
+
+  @@index([actorId, createdAt])
+  @@index([targetId, createdAt])
+}
+
+model App {
+  id                String     @id
+  name              String
+  origin            String     @unique
+  redirectUris      String[]
+  defaultPermission String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  grants            AppGrant[]
+}
+
+model AppGrant {
+  id         String   @id @default(uuid())
+  userId     String
+  appId      String
+  permission String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  app        App      @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, appId])
+  @@index([appId])
+}
+
+model WebAuthnCredential {
+  id           String    @id @default(uuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialId String    @unique
+  publicKey    Bytes
+  counter      BigInt
+  transports   String?
+  deviceName   String?
+  createdAt    DateTime  @default(now())
+  lastUsedAt   DateTime?
+
+  @@index([userId])
+}

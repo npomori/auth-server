@@ -1,0 +1,112 @@
+# テスト方法
+
+認証サーバーと別プロジェクトの参加アプリを、ローカルで同時に動かす確認は [participant-integration.md](./participant-integration.md) です。
+
+## 自動テスト
+
+### 単体・API スモーク（DB モック）
+
+```bash
+pnpm install
+pnpm test
+```
+
+開発中のウォッチ実行:
+
+```bash
+pnpm test:watch
+```
+
+対象:
+
+- `src/server/auth/*.test.ts` — パスワード・トークン・レート制限・チャレンジ・開発時のホスト誘導などの純関数
+- `src/server/api/app.test.ts` — `app.request()` による API スモーク（未認証応答など）
+- `src/server/env-check.test.ts` — 本番の環境変数チェック
+- `src/server/db-log.test.ts` — Prisma のログレベル
+
+実 PostgreSQL / Playwright / パスキー UI は使いません。
+
+### 統合テスト（実 PostgreSQL + Redis）
+
+専用 DB（`TEST_DATABASE_URL`）と Redis（`REDIS_URL`）に対して、モックなしで API + Prisma + Redis を検証します。パスキー登録セレモニー自体は対象外です（Credential 行のフィクスチャ挿入のみ）。
+
+```bash
+# 1. テスト用 Postgres + Redis（Docker がある場合）
+docker compose -f docker-compose.db.yaml up -d
+
+# 既存のローカル Postgres を使う場合は、DATABASE_URL と同じ接続先に
+# DB `astro_webauthn_test` を作り .env へ TEST_DATABASE_URL を追記できる:
+# pnpm exec tsx scripts/ensure-test-db.mjs
+
+# 2. .env に TEST_DATABASE_URL を設定（.env.example 参照）
+# TEST_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/astro_webauthn_test?schema=public"
+# REDIS_URL 未設定時は redis://localhost:6379/ を使用
+
+# 3. Prisma Client（未生成の場合）
+pnpm db:generate
+
+# 4. 実行（初回に migrate deploy が走る）
+pnpm test:integration
+```
+
+`TEST_DATABASE_URL` が未設定の場合は、明確なエラーメッセージを表示して失敗します。開発用の `DATABASE_URL` とは別の DB を使ってください。統合テストでは `REDIS_KEY_PREFIX` を自動設定し、テスト間に Redis キーを削除します。
+
+単体と統合をまとめて実行する場合:
+
+```bash
+pnpm test:all
+```
+
+対象:
+
+- `src/server/api/auth.integration.test.ts` — パスワード／マジックリンク、セッション、ログアウト、再設定、パスキー登録、無効アカウントのログイン開始拒否と全セッション破棄
+- `src/server/api/admin.integration.test.ts` — ユーザー招待・一覧・統計、共通ロールの変更、無効化と再実行、アプリの利用許可、例外の `none`
+- `src/server/api/devices.integration.test.ts` — 一覧、削除、再認証、招待、登録、無効アカウントの登録拒否
+- `src/server/auth/handoff.integration.test.ts` — 引き渡しと実効権限
+- `src/server/api/email-change.integration.test.ts` — メールアドレス変更の申請、受信確認、確定
+- `src/server/db/*.integration.test.ts` — User / Credential / Session / DeviceInvite / PasswordReset / MagicLink / EmailChange
+
+## 静的チェック
+
+```bash
+pnpm lint
+pnpm build
+```
+
+- `pnpm lint` — ESLint
+- `pnpm build` — Astro SSR ビルドが通るかの確認
+
+## 手動検証
+
+### 前提
+
+```bash
+pnpm install
+# .env.example を .env にコピーして DATABASE_URL / REDIS_URL 等を設定
+docker compose -f docker-compose.db.yaml up -d
+pnpm db:generate
+pnpm db:migrate
+pnpm db:seed
+pnpm dev
+```
+
+`pnpm dev` は待受 URL として `http://localhost:3000` を表示します。ページを開くと、開発中は認証サーバーのオリジン `http://auth.localhost:3000` に移動します。ログインとパスキー登録はこのホストで行います。`localhost` のまま更新リクエストを送ると `Origin` が一致せず、「オリジンが不正です」というエラーになります。
+
+seed 管理者（`.env` の `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`）は、メールアドレスを入れて「続行」したあと、表示されたパスワード欄に `SEED_ADMIN_PASSWORD` を入れてログインし、パスキーを登録してください。参加アプリに入れるかは、アプリの既定の利用許可と例外の `AppGrant` で決まります。認証サーバー自身には `AppGrant` を付けません。
+
+ローカルでは `MAIL_MODE=console` のため、招待・再設定メールはサーバーログに出力されます。
+
+WebAuthn の RP ID は `WEBAUTHN_RP_ID`（開発既定 `auth.localhost`）です。ブラウザのパスキー UI が必要です。
+
+### 確認フロー
+
+| 流れ | 画面 / API |
+|------|------------|
+| seed 管理者の初回ログイン → パスキー登録 | `/login`（メール → パスワード）→ `/setup-passkey` |
+| 初回マジックリンクログイン → パスキー登録 | `/auth/link/[token]` → `/setup-passkey` |
+| 以降のパスキーログイン | `/login` |
+| 管理者によるユーザー招待 | `/admin/users`（ログの招待リンク） |
+| デバイス追加 | `/devices` → `/invite/device/[token]` |
+| ログインできないときの復旧 | `/forgot-password` → `/reset-password/[token]` |
+| アプリの利用許可と例外 | `/admin/apps` |
+| 管理者ダッシュボード | `/dashboard` |

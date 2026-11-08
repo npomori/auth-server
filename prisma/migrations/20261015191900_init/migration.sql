@@ -1,0 +1,109 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "role" TEXT NOT NULL,
+    "disabledAt" TIMESTAMP(3),
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "RoleChange" (
+    "id" TEXT NOT NULL,
+    "actorId" TEXT NOT NULL,
+    "targetId" TEXT NOT NULL,
+    "fromRole" TEXT NOT NULL,
+    "toRole" TEXT NOT NULL,
+    "success" BOOLEAN NOT NULL,
+    "reason" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "RoleChange_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "App" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "origin" TEXT NOT NULL,
+    "redirectUris" TEXT[],
+    "defaultPermission" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "App_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "AppGrant" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "appId" TEXT NOT NULL,
+    "permission" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "AppGrant_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WebAuthnCredential" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "credentialId" TEXT NOT NULL,
+    "publicKey" BYTEA NOT NULL,
+    "counter" BIGINT NOT NULL,
+    "transports" TEXT,
+    "deviceName" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "lastUsedAt" TIMESTAMP(3),
+
+    CONSTRAINT "WebAuthnCredential_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE INDEX "RoleChange_actorId_createdAt_idx" ON "RoleChange"("actorId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "RoleChange_targetId_createdAt_idx" ON "RoleChange"("targetId", "createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "App_origin_key" ON "App"("origin");
+
+-- CreateIndex
+CREATE INDEX "AppGrant_appId_idx" ON "AppGrant"("appId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "AppGrant_userId_appId_key" ON "AppGrant"("userId", "appId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "WebAuthnCredential_credentialId_key" ON "WebAuthnCredential"("credentialId");
+
+-- CreateIndex
+CREATE INDEX "WebAuthnCredential_userId_idx" ON "WebAuthnCredential"("userId");
+
+-- AddForeignKey
+ALTER TABLE "RoleChange" ADD CONSTRAINT "RoleChange_actorId_fkey" FOREIGN KEY ("actorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "RoleChange" ADD CONSTRAINT "RoleChange_targetId_fkey" FOREIGN KEY ("targetId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "AppGrant" ADD CONSTRAINT "AppGrant_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "AppGrant" ADD CONSTRAINT "AppGrant_appId_fkey" FOREIGN KEY ("appId") REFERENCES "App"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "WebAuthnCredential" ADD CONSTRAINT "WebAuthnCredential_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
