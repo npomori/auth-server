@@ -1,5 +1,5 @@
 ---
-import Layout from '@/layouts/Layout.astro'
+import Layout from '@/layouts/FrontLayout.astro'
 import InviteDeviceForm from '@/components/InviteDeviceForm'
 
 const { token } = Astro.params
@@ -9,7 +9,5 @@ if (!token) {
 ---
 
 <Layout title="デバイス登録">
-  <main class="mx-auto max-w-3xl px-4 py-10">
-    <InviteDeviceForm client:load token={token} />
-  </main>
+  <InviteDeviceForm client:load token={token} />
 </Layout>

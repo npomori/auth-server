@@ -89,9 +89,7 @@ export default function LoginForm({ next }: { next?: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow">
-      <h2 className="mb-4 text-xl font-semibold text-gray-900">ログイン</h2>
-
+    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-sm">
       {step === 'email' && (
         <form onSubmit={handleContinue} className="space-y-4">
           <div>
@@ -101,13 +99,13 @@ export default function LoginForm({ next }: { next?: string }) {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded border border-gray-300 px-3 py-2"
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             続行
           </button>
@@ -127,7 +125,7 @@ export default function LoginForm({ next }: { next?: string }) {
               type="button"
               disabled={loading}
               onClick={() => void handleResend()}
-              className="w-full rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+              className="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             >
               ログイン用リンクを再送
             </button>
@@ -141,13 +139,13 @@ export default function LoginForm({ next }: { next?: string }) {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded border border-gray-300 px-3 py-2"
+                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+              className="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             >
               パスワードでログイン
             </button>
@@ -155,7 +153,7 @@ export default function LoginForm({ next }: { next?: string }) {
           <button
             type="button"
             onClick={() => setStep('email')}
-            className="w-full text-sm text-gray-600 underline"
+            className="w-full text-sm text-blue-700 underline"
           >
             戻る
           </button>
@@ -170,14 +168,14 @@ export default function LoginForm({ next }: { next?: string }) {
             type="button"
             disabled={loading}
             onClick={() => void handlePasskeyLogin()}
-            className="w-full rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             パスキーでログイン
           </button>
           <button
             type="button"
             onClick={() => setStep('email')}
-            className="w-full text-sm text-gray-600 underline"
+            className="w-full text-sm text-blue-700 underline"
           >
             戻る
           </button>
@@ -185,7 +183,7 @@ export default function LoginForm({ next }: { next?: string }) {
       )}
 
       <p className="mt-6 text-center text-sm">
-        <a href="/forgot-password" className="text-gray-700 underline">
+        <a href="/forgot-password" className="text-blue-700 underline">
           ログインできないとき
         </a>
       </p>

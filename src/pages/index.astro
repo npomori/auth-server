@@ -1,5 +1,5 @@
 ---
-import Layout from '@/layouts/Layout.astro'
+import Layout from '@/layouts/FrontLayout.astro'
 import { homePathForRole } from '@/lib/user-role'
 import { getPageSession } from '@/lib/auth-page'
 
@@ -15,7 +15,5 @@ return Astro.redirect(homePathForRole(session.user.role))
 ---
 
 <Layout title="Home">
-  <main class="mx-auto max-w-3xl px-4 py-10">
-    <p class="text-gray-600">リダイレクト中...</p>
-  </main>
+  <p class="text-gray-600">リダイレクト中...</p>
 </Layout>

@@ -1,5 +1,5 @@
 ---
-import Layout from '@/layouts/Layout.astro'
+import Layout from '@/layouts/AdminLayout.astro'
 import { getPageSession, redirectForAuth } from '@/lib/auth-page'
 import { UserDB } from '@/server/db'
 
@@ -13,28 +13,29 @@ const [userCount, adminCount] = await Promise.all([UserDB.count(), UserDB.countA
 ---
 
 <Layout title="ダッシュボード">
-  <main class="mx-auto max-w-4xl px-4 py-10">
-    <h1 class="mb-6 text-2xl font-bold text-gray-900">管理者ダッシュボード</h1>
-    <div class="grid gap-4 sm:grid-cols-2">
-      <div class="rounded-lg bg-white p-6 shadow">
-        <p class="text-sm text-gray-500">ユーザー数</p>
-        <p class="text-3xl font-semibold text-gray-900">{userCount}</p>
-      </div>
-      <div class="rounded-lg bg-white p-6 shadow">
-        <p class="text-sm text-gray-500">管理者数</p>
-        <p class="text-3xl font-semibold text-gray-900">{adminCount}</p>
-      </div>
+  <h1 class="mb-6 text-2xl font-semibold text-gray-900">管理者ダッシュボード</h1>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="rounded-lg bg-white p-6 shadow-sm">
+      <p class="text-sm text-gray-500">ユーザー数</p>
+      <p class="mt-2 text-3xl font-semibold text-gray-900">{userCount}</p>
     </div>
-    <div class="mt-8 flex gap-4">
-      <a href="/admin/users" class="rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700">
-        ユーザー管理
-      </a>
-      <a
-        href="/admin/apps"
-        class="rounded border border-gray-300 px-4 py-2 text-gray-800 hover:bg-gray-50"
-      >
-        アプリ
-      </a>
+    <div class="rounded-lg bg-white p-6 shadow-sm">
+      <p class="text-sm text-gray-500">管理者数</p>
+      <p class="mt-2 text-3xl font-semibold text-gray-900">{adminCount}</p>
     </div>
-  </main>
+  </div>
+  <div class="mt-8 flex flex-wrap gap-3">
+    <a
+      href="/admin/users"
+      class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 focus:outline-none"
+    >
+      ユーザー管理
+    </a>
+    <a
+      href="/admin/apps"
+      class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 focus:outline-none"
+    >
+      アプリ
+    </a>
+  </div>
 </Layout>

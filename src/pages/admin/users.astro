@@ -1,5 +1,5 @@
 ---
-import Layout from '@/layouts/Layout.astro'
+import Layout from '@/layouts/AdminLayout.astro'
 import AdminUsersSection from '@/components/AdminUsersSection'
 import { getPageSession, redirectForAuth } from '@/lib/auth-page'
 
@@ -11,8 +11,6 @@ if (redirectTo || !session) {
 ---
 
 <Layout title="ユーザー管理">
-  <main class="mx-auto max-w-5xl px-4 py-10">
-    <h1 class="mb-6 text-2xl font-bold text-gray-900">ユーザー管理</h1>
-    <AdminUsersSection client:load actorRole={session.user.role} />
-  </main>
+  <h1 class="mb-6 text-2xl font-semibold text-gray-900">ユーザー管理</h1>
+  <AdminUsersSection client:load actorRole={session.user.role} />
 </Layout>

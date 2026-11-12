@@ -188,8 +188,8 @@ export default function AdminAppsSection() {
   const grantApps = apps.filter((app) => !app.isAuthServer)
 
   return (
-    <div className="space-y-8">
-      <form onSubmit={handleCreate} className="rounded-lg bg-white p-6 shadow">
+    <div className="space-y-6">
+      <form onSubmit={handleCreate} className="rounded-lg bg-white p-6 shadow-sm">
         <h2 className="mb-4 text-xl font-semibold text-gray-900">アプリを登録</h2>
         <div className="mb-3 grid gap-3 md:grid-cols-2">
           <label className="block text-sm text-gray-700">
@@ -198,7 +198,7 @@ export default function AdminAppsSection() {
               required
               value={id}
               onChange={(e) => setId(e.target.value)}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             />
           </label>
           <label className="block text-sm text-gray-700">
@@ -207,7 +207,7 @@ export default function AdminAppsSection() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             />
           </label>
           <label className="block text-sm text-gray-700 md:col-span-2">
@@ -217,7 +217,7 @@ export default function AdminAppsSection() {
               value={origin}
               onChange={(e) => setOrigin(e.target.value)}
               placeholder="https://app.example.com"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             />
           </label>
           <label className="block text-sm text-gray-700 md:col-span-2">
@@ -226,7 +226,7 @@ export default function AdminAppsSection() {
               value={redirectUris}
               onChange={(e) => setRedirectUris(e.target.value)}
               rows={3}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             />
           </label>
           <label className="block text-sm text-gray-700 md:col-span-2">
@@ -235,7 +235,7 @@ export default function AdminAppsSection() {
               required
               value={defaultPermission}
               onChange={(e) => setDefaultPermission(e.target.value)}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             >
               <option value="">選択</option>
               <option value="null">利用を許可しない（個別のみ）</option>
@@ -246,7 +246,7 @@ export default function AdminAppsSection() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+          className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
           登録
         </button>
@@ -262,7 +262,7 @@ export default function AdminAppsSection() {
         )}
       </section>
 
-      <form onSubmit={handleGrant} className="rounded-lg bg-white p-6 shadow">
+      <form onSubmit={handleGrant} className="rounded-lg bg-white p-6 shadow-sm">
         <h2 className="mb-4 text-xl font-semibold text-gray-900">利用許可</h2>
         <div className="mb-3 grid gap-3 md:grid-cols-3">
           <label className="block text-sm text-gray-700">
@@ -271,7 +271,7 @@ export default function AdminAppsSection() {
               required
               value={grantUserId}
               onChange={(e) => setGrantUserId(e.target.value)}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             >
               <option value="">選択</option>
               {users.map((user) => (
@@ -287,7 +287,7 @@ export default function AdminAppsSection() {
               required
               value={grantAppId}
               onChange={(e) => setGrantAppId(e.target.value)}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             >
               <option value="">選択</option>
               {grantApps.map((app) => (
@@ -304,7 +304,7 @@ export default function AdminAppsSection() {
               onChange={(e) => {
                 setPermission(e.target.value === 'none' ? 'none' : 'allow')
               }}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             >
               <option value="allow">利用可</option>
               <option value="none">利用不可</option>
@@ -314,18 +314,18 @@ export default function AdminAppsSection() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+          className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
           保存
         </button>
-        <ul className="mt-4 space-y-2">
+        <ul className="mt-4 divide-y divide-gray-100">
           {grants.map((grant) => {
             const user = users.find((item) => item.id === grant.userId)
             const app = apps.find((item) => item.id === grant.appId)
             return (
               <li
                 key={grant.id}
-                className="flex items-center justify-between text-sm text-gray-800"
+                className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"
               >
                 <span>
                   {user?.email ?? grant.userId} / {app?.name ?? grant.appId} /{' '}
@@ -334,7 +334,7 @@ export default function AdminAppsSection() {
                 <button
                   type="button"
                   onClick={() => void handleDeleteGrant(grant.userId, grant.appId)}
-                  className="text-red-700 underline"
+                  className="bg-error-700 hover:bg-error-800 focus:ring-error-300 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-1 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none"
                 >
                   削除
                 </button>
@@ -349,21 +349,21 @@ export default function AdminAppsSection() {
 
 function AuthServerAppView({ app }: { app: AppRow }) {
   return (
-    <section className="rounded-lg bg-white p-6 shadow">
+    <section className="rounded-lg bg-white p-6 shadow-sm">
       <h2 className="mb-1 text-lg font-semibold text-gray-900">{app.id}</h2>
       <p className="mb-3 text-sm text-gray-600">{app.origin}</p>
       <dl className="space-y-2 text-sm text-gray-700">
         <div>
-          <dt>表示名</dt>
+          <dt className="text-gray-500">表示名</dt>
           <dd>{app.name}</dd>
         </div>
         <div>
-          <dt>既定の利用許可</dt>
+          <dt className="text-gray-500">既定の利用許可</dt>
           <dd>対象外</dd>
         </div>
         {app.redirectUris.length > 0 ? (
           <div>
-            <dt>戻り先 URL</dt>
+            <dt className="text-gray-500">戻り先 URL</dt>
             <dd className="whitespace-pre-line">{app.redirectUris.join('\n')}</dd>
           </div>
         ) : null}
@@ -397,7 +397,7 @@ function AppEditor({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg bg-white p-6 shadow">
+    <form onSubmit={handleSubmit} className="rounded-lg bg-white p-6 shadow-sm">
       <h2 className="mb-1 text-lg font-semibold text-gray-900">{app.id}</h2>
       <p className="mb-3 text-sm text-gray-600">{app.origin}</p>
       <div className="mb-3 grid gap-3 md:grid-cols-2">
@@ -407,7 +407,7 @@ function AppEditor({
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
           />
         </label>
         <label className="block text-sm text-gray-700">
@@ -416,7 +416,7 @@ function AppEditor({
             value={redirectUris}
             onChange={(e) => setRedirectUris(e.target.value)}
             rows={3}
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
           />
         </label>
         <label className="block text-sm text-gray-700 md:col-span-2">
@@ -425,7 +425,7 @@ function AppEditor({
             required
             value={defaultChoice}
             onChange={(e) => setDefaultChoice(e.target.value)}
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
           >
             <option value="null">利用を許可しない（個別のみ）</option>
             <option value="allow">全利用者に利用を許可</option>
@@ -435,14 +435,14 @@ function AppEditor({
       <div className="flex gap-3">
         <button
           type="submit"
-          className="rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700"
+          className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none"
         >
           更新
         </button>
         <button
           type="button"
           onClick={() => void onDelete(app.id)}
-          className="rounded border border-red-700 px-4 py-2 text-red-700"
+          className="bg-error-700 hover:bg-error-800 focus:ring-error-300 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none"
         >
           削除
         </button>

@@ -32,14 +32,14 @@ function PasswordField({
           autoComplete="new-password"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded border border-gray-300 px-3 py-2"
+          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
         />
         <button
           type="button"
           onClick={() => setVisible((current) => !current)}
           aria-label={visible ? `${label}を隠す` : `${label}を表示`}
           aria-pressed={visible}
-          className="shrink-0 rounded border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          className="focus:ring-primary-300 inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:ring-4 focus:outline-none"
         >
           {visible ? '隠す' : '表示'}
         </button>
@@ -78,8 +78,7 @@ export default function ResetPasswordForm({ token }: Props) {
   }
 
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow">
-      <h2 className="mb-2 text-xl font-semibold text-gray-900">復旧用のパスワードを設定</h2>
+    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-sm">
       <p className="mb-4 text-sm text-red-700">
         注意:
         この操作を完了すると、登録済みのパスキーはすべて無効になります。ここで決めたパスワードは、パスキー再登録までの一時的な入場手段です。
@@ -95,7 +94,7 @@ export default function ResetPasswordForm({ token }: Props) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+          className="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
           復旧して続行
         </button>

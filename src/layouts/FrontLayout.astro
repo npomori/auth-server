@@ -1,0 +1,27 @@
+---
+import LogoutButton from '@/components/LogoutButton'
+import { authEnv } from '@/server/auth/env'
+import Layout from '@/layouts/Layout.astro'
+
+interface Props {
+  title: string
+  showLogout?: boolean
+}
+
+const { title, showLogout = false } = Astro.props
+const displayName = authEnv.rpName()
+---
+
+<Layout title={title}>
+  <header class="bg-black text-white">
+    <nav class="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
+      <a class="text-lg font-semibold text-white" href="/">
+        {displayName}
+      </a>
+      {showLogout && <LogoutButton client:load appearance="header" />}
+    </nav>
+  </header>
+  <main class="mx-auto max-w-3xl px-4 py-10">
+    <slot />
+  </main>
+</Layout>

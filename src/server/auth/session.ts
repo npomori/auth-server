@@ -103,7 +103,7 @@ export async function slideSession(session: ResolvedSession): Promise<void> {
 export type ResolveSessionFromCookiesOptions = {
   /**
    * Sliding session のため Cookie の Max-Age を延長する。
-   * Astro のページ frontmatter でのみ true にする（Layout / Navigation 等の
+   * Astro のページ frontmatter でのみ true にする（Layout 等の
    * インポート先コンポーネントでは false。レスポンス送信後の set は警告になる）。
    */
   refreshCookie?: boolean

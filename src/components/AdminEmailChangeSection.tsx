@@ -99,7 +99,7 @@ export default function AdminEmailChangeSection({
   }
 
   return (
-    <div className="rounded-lg bg-white p-6 shadow">
+    <div className="rounded-lg bg-white p-6 shadow-sm">
       <h2 className="mb-2 text-xl font-semibold text-gray-900">メールアドレスを変更</h2>
       <p className="mb-4 text-sm text-gray-600">
         新しいアドレスへ確認メールを送ります。受信確認のあと、あなたのパスキーで確定するとアドレスが変わり、そのユーザーの全セッションが切れます。
@@ -111,7 +111,7 @@ export default function AdminEmailChangeSection({
             required
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
-            className="w-full rounded border border-gray-300 px-3 py-2"
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
           >
             <option value="">選択してください</option>
             {users.map((user) => (
@@ -128,14 +128,14 @@ export default function AdminEmailChangeSection({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded border border-gray-300 px-3 py-2"
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
           />
         </div>
         <div className="md:col-span-2">
           <button
             type="submit"
             disabled={loading}
-            className="rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+            className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             確認メールを送る
           </button>
@@ -165,7 +165,7 @@ export default function AdminEmailChangeSection({
                     type="button"
                     disabled={loading}
                     onClick={() => void handleCommit(item.userId)}
-                    className="rounded bg-gray-800 px-3 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+                    className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     再認証して確定
                   </button>

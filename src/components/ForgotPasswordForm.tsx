@@ -21,8 +21,7 @@ export default function ForgotPasswordForm() {
   }
 
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow">
-      <h2 className="mb-4 text-xl font-semibold text-gray-900">ログインできないとき</h2>
+    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-sm">
       <p className="mb-4 text-sm text-gray-600">
         パスキーでログインできない場合の復旧です。完了すると、登録済みのパスキーはすべて無効になります。
       </p>
@@ -37,20 +36,20 @@ export default function ForgotPasswordForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded border border-gray-300 px-3 py-2"
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             復旧メールを送信
           </button>
         </form>
       )}
       <p className="mt-6 text-center text-sm">
-        <a href="/login" className="text-gray-700 underline">
+        <a href="/login" className="text-blue-700 underline">
           ログインに戻る
         </a>
       </p>

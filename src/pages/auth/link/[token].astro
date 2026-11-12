@@ -1,5 +1,5 @@
 ---
-import Layout from '@/layouts/Layout.astro'
+import Layout from '@/layouts/FrontLayout.astro'
 import MagicLinkForm from '@/components/MagicLinkForm'
 
 const { token } = Astro.params
@@ -9,7 +9,6 @@ if (!token) {
 ---
 
 <Layout title="ログイン">
-  <main class="mx-auto max-w-3xl px-4 py-10">
-    <MagicLinkForm client:load token={token} />
-  </main>
+  <h1 class="mb-6 text-2xl font-semibold text-gray-900">ログイン</h1>
+  <MagicLinkForm client:load token={token} />
 </Layout>

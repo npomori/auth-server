@@ -1,5 +1,5 @@
 ---
-import Layout from '@/layouts/Layout.astro'
+import Layout from '@/layouts/FrontLayout.astro'
 import SetupPasskeyForm from '@/components/SetupPasskeyForm'
 import { getPageSession, redirectForAuth } from '@/lib/auth-page'
 import { homePathForRole } from '@/lib/user-role'
@@ -14,8 +14,7 @@ if (session && !session.user.mustSetupPasskey) {
 }
 ---
 
-<Layout title="パスキー登録">
-  <main class="mx-auto max-w-3xl px-4 py-10">
-    <SetupPasskeyForm client:load />
-  </main>
+<Layout title="パスキー登録" showLogout>
+  <h1 class="mb-6 text-2xl font-semibold text-gray-900">パスキーを登録</h1>
+  <SetupPasskeyForm client:load />
 </Layout>

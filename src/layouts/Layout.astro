@@ -1,6 +1,5 @@
 ---
 import '@/styles/global.css'
-import Navigation from '@/layouts/Navigation.astro'
 
 interface Props {
   title: string
@@ -19,8 +18,7 @@ const { title } = Astro.props
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="bg-gray-50">
-    <Navigation />
+  <body class="bg-gray-50 text-gray-900">
     <slot />
   </body>
 </html>

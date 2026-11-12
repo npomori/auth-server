@@ -1,0 +1,135 @@
+---
+import AccountMenu from '@/components/AccountMenu'
+import { getPageSession } from '@/lib/auth-page'
+import { adminHomeHref, adminNavItems, isAdminNavCurrent } from '@/lib/admin-nav'
+import { roleLabel } from '@/lib/user-role'
+import { authEnv } from '@/server/auth/env'
+import Layout from '@/layouts/Layout.astro'
+
+interface Props {
+  title: string
+}
+
+const { title } = Astro.props
+const session = await getPageSession(Astro.cookies, { refreshCookie: false })
+const user = session?.user
+const displayName = authEnv.rpName()
+const home = user ? adminHomeHref(user.role) : '/login'
+const items = user ? adminNavItems(user.role) : []
+const currentPath = Astro.url.pathname
+---
+
+<Layout title={title}>
+  <header class="fixed z-30 w-full border-b border-white/10 bg-black text-white">
+    <div class="px-3 py-3 lg:px-5">
+      <div class="flex items-center">
+        <div class="flex flex-1 items-center justify-start">
+          <label
+            for="admin-sidebar"
+            class="mr-2 cursor-pointer rounded p-2 text-white hover:bg-white/10 lg:hidden"
+          >
+            <span class="sr-only">サイドバー</span>
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path
+                fill-rule="evenodd"
+                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </label>
+          <a href={home} class="ml-0 flex items-center lg:ml-64">
+            <span class="bg-brand mr-2 inline-flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white">
+              認
+            </span>
+            <span class="self-center text-lg font-semibold whitespace-nowrap text-white">
+              {displayName}
+            </span>
+          </a>
+        </div>
+        {user && (
+          <AccountMenu
+            client:load
+            name={user.name}
+            email={user.email}
+            roleLabel={roleLabel(user.role)}
+          />
+        )}
+      </div>
+    </div>
+  </header>
+  <div class="flex overflow-hidden bg-gray-50 pt-16">
+    <input id="admin-sidebar" type="checkbox" class="peer hidden" />
+    <aside
+      class="peer-checked:max-lg:flex fixed top-0 left-0 z-20 h-full w-64 max-lg:hidden flex-col pt-16 lg:flex"
+      aria-label="サイドバー"
+    >
+      <div class="relative flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white pt-0">
+        <div class="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
+          <div class="flex-1 bg-white px-3">
+            <ul class="space-y-2 pb-2">
+              {items.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={isAdminNavCurrent(currentPath, item.href) ? 'page' : undefined}
+                    class:list={[
+                      'group flex items-center rounded-lg p-2 text-base text-gray-900 hover:bg-gray-100',
+                      isAdminNavCurrent(currentPath, item.href) && 'bg-gray-100'
+                    ]}
+                  >
+                    {item.icon === 'dashboard' && (
+                      <svg
+                        class="h-6 w-6 text-gray-500 group-hover:text-gray-900"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 3h8v8H3V3zm10 0h8v5h-8V3zM3 13h8v8H3v-8zm10 7v-8h8v8h-8z" />
+                      </svg>
+                    )}
+                    {item.icon === 'users' && (
+                      <svg
+                        class="h-6 w-6 text-gray-500 group-hover:text-gray-900"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                      </svg>
+                    )}
+                    {item.icon === 'apps' && (
+                      <svg
+                        class="h-6 w-6 text-gray-500 group-hover:text-gray-900"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" />
+                      </svg>
+                    )}
+                    {item.icon === 'devices' && (
+                      <svg
+                        class="h-6 w-6 text-gray-500 group-hover:text-gray-900"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2zm5 18a1.25 1.25 0 100-2.5A1.25 1.25 0 0012 20zM8 5v10h8V5H8z" />
+                      </svg>
+                    )}
+                    <span class="ml-3">{item.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <main class="relative min-h-[calc(100vh-4rem)] w-full overflow-y-auto bg-gray-50 lg:ml-64">
+      <div class="px-4 py-8 lg:px-8">
+        <slot />
+      </div>
+    </main>
+  </div>
+</Layout>

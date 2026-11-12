@@ -1,5 +1,5 @@
 ---
-import Layout from '@/layouts/Layout.astro'
+import Layout from '@/layouts/AdminLayout.astro'
 import DeviceManager from '@/components/DeviceManager'
 import { getPageSession, redirectForAuth } from '@/lib/auth-page'
 
@@ -11,8 +11,6 @@ if (redirectTo) {
 ---
 
 <Layout title="デバイス">
-  <main class="mx-auto max-w-4xl px-4 py-10">
-    <h1 class="mb-6 text-2xl font-bold text-gray-900">デバイス管理</h1>
-    <DeviceManager client:load />
-  </main>
+  <h1 class="mb-6 text-2xl font-semibold text-gray-900">デバイス管理</h1>
+  <DeviceManager client:load />
 </Layout>

@@ -51,43 +51,47 @@ export default function InviteDeviceForm({ token }: Props) {
 
   if (done) {
     return (
-      <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-2 text-xl font-semibold text-gray-900">登録完了</h2>
-        <p className="mb-4 text-sm text-gray-600">このデバイスのパスキーを登録しました。</p>
-        <a href="/login" className="text-gray-800 underline">
-          ログインへ
-        </a>
+      <div>
+        <h1 className="mb-6 text-2xl font-semibold text-gray-900">登録完了</h1>
+        <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-sm">
+          <p className="mb-4 text-sm text-gray-600">このデバイスのパスキーを登録しました。</p>
+          <a href="/login" className="text-blue-700 underline">
+            ログインへ
+          </a>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow">
-      <h2 className="mb-2 text-xl font-semibold text-gray-900">デバイスにパスキーを登録</h2>
-      <p className="mb-4 text-sm text-gray-600">
-        招待リンクから新しいデバイスのパスキーを登録します。
-      </p>
-      <div className="mb-4">
-        <label htmlFor="device-name" className="mb-1 block text-sm text-gray-700">
-          デバイス名
-        </label>
-        <input
-          id="device-name"
-          type="text"
-          required
-          value={deviceName}
-          onChange={(e) => setDeviceName(e.target.value)}
-          className="w-full rounded border border-gray-300 px-3 py-2"
-        />
+    <div>
+      <h1 className="mb-6 text-2xl font-semibold text-gray-900">デバイスにパスキーを登録</h1>
+      <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-sm">
+        <p className="mb-4 text-sm text-gray-600">
+          招待リンクから新しいデバイスのパスキーを登録します。
+        </p>
+        <div className="mb-4">
+          <label htmlFor="device-name" className="mb-1 block text-sm text-gray-700">
+            デバイス名
+          </label>
+          <input
+            id="device-name"
+            type="text"
+            required
+            value={deviceName}
+            onChange={(e) => setDeviceName(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
+          />
+        </div>
+        <button
+          type="button"
+          disabled={loading}
+          onClick={handleRegister}
+          className="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          パスキーを登録
+        </button>
       </div>
-      <button
-        type="button"
-        disabled={loading}
-        onClick={handleRegister}
-        className="w-full rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
-      >
-        パスキーを登録
-      </button>
     </div>
   )
 }

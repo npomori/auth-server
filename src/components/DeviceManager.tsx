@@ -70,11 +70,11 @@ export default function DeviceManager() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg bg-white p-6 shadow">
+      <div className="rounded-lg bg-white p-6 shadow-sm">
         <h2 className="mb-2 text-xl font-semibold text-gray-900">登録済みデバイス</h2>
         <ul className="divide-y divide-gray-200">
           {devices.map((device) => (
-            <li key={device.id} className="flex items-center justify-between py-3">
+            <li key={device.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
               <div>
                 <p className="font-medium text-gray-900">{device.deviceName || '名称未設定'}</p>
                 <p className="text-sm text-gray-500">
@@ -84,7 +84,7 @@ export default function DeviceManager() {
               <button
                 type="button"
                 onClick={() => handleDelete(device.id)}
-                className="rounded border border-red-300 px-3 py-1 text-sm text-red-700 hover:bg-red-50"
+                className="bg-error-700 hover:bg-error-800 focus:ring-error-300 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-1 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none"
               >
                 削除
               </button>
@@ -96,7 +96,7 @@ export default function DeviceManager() {
         </ul>
       </div>
 
-      <div className="rounded-lg bg-white p-6 shadow">
+      <div className="rounded-lg bg-white p-6 shadow-sm">
         <h3 className="mb-2 text-lg font-semibold text-gray-900">デバイスを追加</h3>
         <p className="mb-4 text-sm text-gray-600">
           再認証のあと、登録済みメールアドレスへ招待リンクを送信します（1時間有効）。
@@ -105,11 +105,27 @@ export default function DeviceManager() {
           type="button"
           disabled={loading}
           onClick={handleInvite}
-          className="rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+          className="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
           再認証して招待メールを送る
         </button>
-        {message && <p className="mt-3 text-sm text-green-700">{message}</p>}
+        {message ? (
+          <div
+            className="bg-success-50 text-success-800 mt-4 flex items-center rounded-lg p-4 text-base"
+            role="status"
+          >
+            <svg
+              className="mr-2 h-6 w-6 shrink-0"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.2l-3.5-3.5 1.4-1.4 2.1 2.1 4.5-4.5 1.4 1.4-5.9 5.9z" />
+            </svg>
+            <span className="sr-only">success</span>
+            <span>{message}</span>
+          </div>
+        ) : null}
       </div>
     </div>
   )

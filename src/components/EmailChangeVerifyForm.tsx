@@ -24,8 +24,7 @@ export default function EmailChangeVerifyForm({ token }: Props) {
   }
 
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow">
-      <h2 className="mb-2 text-xl font-semibold text-gray-900">メールアドレスの確認</h2>
+    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-sm">
       {done ? (
         <p className="text-sm text-gray-700">
           受信を確認しました。メールアドレスは、管理者が確定するまで変わりません。このページではログインしません。
@@ -39,7 +38,7 @@ export default function EmailChangeVerifyForm({ token }: Props) {
             type="button"
             disabled={loading}
             onClick={() => void handleVerify()}
-            className="w-full rounded bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
+            className="inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-gray-800 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             受信を確認する
           </button>
