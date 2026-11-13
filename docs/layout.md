@@ -6,7 +6,7 @@
 
 共通仕様は、色と大まかな枠です。ボタン、入力、表、アラート、アイコン、アバターは各アプリが決めます。
 
-色は `src/styles/theme.css` に書きます。中身はフォント、`primary`、success、error、warning、info です。`--color-brand` は入れません。各アプリの `src/styles/global.css` が Tailwind を読み、`theme.css` を読み、ブランド色を1つ書きます。参加アプリは、骨格パッケージを見る `@source` を残したまま、この `theme.css` をコピーして読みます。認証サーバーのブランド色は `#166534` です。
+色は認証サーバーの `src/styles/theme.css` に書きます。中身はフォント、`primary`、success、error、warning、info です。`--color-brand` は入れません。各アプリの `src/styles/global.css` が Tailwind を読み、`theme.css` を読み、ブランド色を1つ書きます。参加アプリは、骨格パッケージを見る `@source` を残したまま、認証サーバーの `src/styles/theme.css` をコピーして読みます。認証サーバーのブランド色は `#166534` です。
 
 枠は2つです。地色は `bg-gray-50 text-gray-900` です。見出しは `text-2xl font-semibold`、本文リンクは `text-blue-700 underline` です。ヘッダーが黒のとき、どのアプリにいるかは表示名で示します。入口か管理かは、中央のフォームか左のメニューかで分けます。ヘッダーの色では分けません。
 
