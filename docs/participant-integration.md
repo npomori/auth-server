@@ -63,7 +63,7 @@ pnpm db:seed
 
 `pnpm db:seed` は、認証サーバー自身の `App` 行を用意します。管理者は User が 0 件のときだけ作り、`AppGrant` は付けません。
 
-共有テーブルができたあと、参加アプリのデータベースを一度初期化します。手順は [db-init.md](./db-init.md) です。開発用のデータベース名は `astro_webauthn`、`app_participant` のパスワードは `participant-pg-local`、ロール見本のスキーマは `roles` です。手入力するときは、同じデータベースへ接続します。
+共有テーブルができたあと、参加アプリ用のロールとスキーマを一度用意します。手順は [db-init.md](./db-init.md) です。開発用のデータベース名は `astro_webauthn`、`app_participant` のパスワードは `participant-pg-local`、ロール見本のスキーマは `roles` です。SQL は、同じデータベースへ読み書きできるユーザーで実行します。
 
 ```bash
 docker compose -f docker-compose.db.yaml exec postgres psql -U postgres -d astro_webauthn
