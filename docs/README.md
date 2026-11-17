@@ -9,6 +9,7 @@
 | [redis.md](./redis.md)                                     | Redis キー設計・TTL・環境変数・障害時の挙動                                 |
 | [testing.md](./testing.md)                                 | テスト方法（`pnpm test` / `pnpm test:integration`・静的チェック・手動検証） |
 | [participant-integration.md](./participant-integration.md) | 認証サーバーと別プロジェクトの参加アプリをローカルで同時に動かす統合テスト  |
+| [db-init.md](./db-init.md)                                 | 認証サーバーと参加アプリで共通のデータベース初期化                          |
 | [layout.md](./layout.md)                                   | 共通の色と、入口・管理の大まかな枠                                          |
 
 下書きは `planning/` にあります。資料が矛盾したときの優先順位は [../AGENTS.md](../AGENTS.md) に従います。

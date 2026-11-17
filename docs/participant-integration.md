@@ -63,22 +63,13 @@ pnpm db:seed
 
 `pnpm db:seed` は、認証サーバー自身の `App` 行を用意します。管理者は User が 0 件のときだけ作り、`AppGrant` は付けません。
 
-共有テーブルができたあと、参加アプリ用の PostgreSQL ロールを一度作ります。ひな型は [planning/participant/participant-access.sql](../planning/participant/participant-access.sql) です。開発用データベースに対して、次を実行します。
+共有テーブルができたあと、参加アプリのデータベースを一度初期化します。手順は [db-init.md](./db-init.md) です。開発用のデータベース名は `astro_webauthn`、`app_participant` のパスワードは `participant-pg-local`、ロール見本のスキーマは `roles` です。手入力するときは、同じデータベースへ接続します。
 
 ```bash
 docker compose -f docker-compose.db.yaml exec postgres psql -U postgres -d astro_webauthn
 ```
 
-```sql
-CREATE ROLE app_participant LOGIN PASSWORD 'participant-pg-local';
-GRANT CONNECT ON DATABASE astro_webauthn TO app_participant;
-GRANT USAGE ON SCHEMA public TO app_participant;
-GRANT SELECT (id, email, name, role, "disabledAt") ON TABLE "User" TO app_participant;
-GRANT SELECT (id, "userId") ON TABLE "WebAuthnCredential" TO app_participant;
-GRANT SELECT ON TABLE "App", "AppGrant" TO app_participant;
-```
-
-ロールが既にあるときは `CREATE ROLE` を飛ばし、`GRANT` だけ再実行します。共有テーブルを作り直したあとも、`GRANT` を再実行します。このロールは認証サーバーの起動処理では作りません。
+このロールは認証サーバーの起動処理では作りません。共有テーブルを作り直したあとは、参照権限の付与を再実行します。
 
 ## 4. 認証サーバーの起動
 
