@@ -49,6 +49,13 @@ pnpm prisma migrate deploy > /dev/null 2>&1
 
 if [ $? -eq 0 ]; then
     echo "✅ Migrations completed"
+    echo "🔐 Ensuring participant role..."
+    if node dist/ensure-participant-role.mjs; then
+        echo "✅ Participant role step completed"
+    else
+        echo "❌ Participant role step failed"
+        exit 1
+    fi
 else
     echo "❌ Migration failed"
     pnpm prisma migrate deploy 2>&1

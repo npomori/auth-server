@@ -6,50 +6,49 @@
 
 | 側 | 接続 | 起動時にすること |
 | --- | --- | --- |
-| 認証サーバー | 読み書きできるユーザー | `public` の共有テーブルをマイグレーションする |
-| 参加アプリ | `app_participant` | そのアプリのスキーマにある未適用のマイグレーションだけを適用する |
+| 認証サーバー | 読み書きできるユーザー | `public` の共有テーブルをマイグレーションする。`PARTICIPANT_DB_PASSWORD` があるときは、ロール `app_participant`、共有テーブルへの参照権限、スキーマ作成関数を用意する |
+| 参加アプリ | `app_participant` | 自分のスキーマを関数で用意し、そのスキーマにある未適用のマイグレーションだけを適用する |
 
-認証サーバーの起動処理は、ロール `app_participant` もスキーマも作りません。参加アプリの起動処理も作りません。管理者の接続文字列は、参加アプリの本番環境変数に置きません。
+認証サーバーは参加アプリのスキーマを作りません。参加アプリのデプロイ時点で名前が決まるためです。管理者の接続文字列は、参加アプリの本番環境変数に置きません。
 
 読み書きできる接続文字列を参加アプリにも置くと、画面の参照とそのアプリのマイグレーションは動作します。アプリは接続ユーザー名を検査しません。そのユーザーは共有テーブルの全列を読み書きできるので、`User.password` とパスキーの公開鍵材料も参加アプリから届きます。`app_participant` への列権限は使われません。同じ文字列を `app_participant` にすると、認証サーバーは共有テーブルを書き換えられないので動作しません。
 
 ## 順番
 
-1. 認証サーバーを起動し、共有テーブルができるまで待つ。対象は `User`、`WebAuthnCredential`、`App`、`AppGrant` です。
-2. 認証サーバーのデータベースで、下の SQL を一度実行する。
-3. 参加アプリの `DATABASE_URL` を `app_participant` にする。
-4. 参加アプリを起動する。起動時の `prisma migrate deploy` が、そのスキーマの型とテーブルを作る。
+1. 認証サーバーに `PARTICIPANT_DB_PASSWORD` を設定して起動し、共有テーブルができるまで待つ。対象は `User`、`WebAuthnCredential`、`App`、`AppGrant` です。マイグレーションのあと、起動処理がロール、参照権限、スキーマ作成関数を用意します。
+2. 参加アプリの `DATABASE_URL` を `app_participant` にします。パスワードは `PARTICIPANT_DB_PASSWORD` と同じ値です。
+3. 参加アプリを起動する。起動時に自分のスキーマを関数で作り、`prisma migrate deploy` がそのスキーマの型とテーブルを作ります。
 
-Coolify では、手順 2 を認証サーバーが使っている PostgreSQL の画面で実行します。参加アプリの初回デプロイより前です。
+`pnpm dev` は起動スクリプトを通りません。共有テーブルの作成後に `pnpm db:participant-role` を一度実行します。
 
-## 手作業
+## ロール
 
-共有テーブルができたあと、読み書きできるユーザーで実行します。`replace-me` は参加アプリの `DATABASE_URL` に書くパスワードです。`your_database` は認証サーバーと同じデータベース名です。ロール見本のスキーマは `roles` です。別の参加アプリでは、スキーマ名だけをそのアプリのものに置き換えます。
+ロール `app_participant` は全参加アプリで1つです。アプリを増やすたびに作りません。
 
-ロール `app_participant` は全参加アプリで1つです。アプリを増やすたびに作りません。ロールが既にあるときは `CREATE ROLE` だけを飛ばし、パスワードは変えません。残りの文は、そのまま再実行できます。
+パスワードは認証サーバーの環境変数 `PARTICIPANT_DB_PASSWORD` です。Coolify では認証サーバーアプリの環境変数、ローカルでは `.env` に置きます。未設定のときはロールも関数も作りません。認証サーバーは起動します。参加アプリは関数が無いので起動しません。
 
-```sql
-CREATE ROLE app_participant LOGIN PASSWORD 'replace-me';
-GRANT app_participant TO CURRENT_USER;
-GRANT CONNECT ON DATABASE your_database TO app_participant;
-GRANT USAGE ON SCHEMA public TO app_participant;
-GRANT SELECT (id, email, name, role, "disabledAt") ON TABLE "User" TO app_participant;
-GRANT SELECT (id, "userId") ON TABLE "WebAuthnCredential" TO app_participant;
-GRANT SELECT ON TABLE "App", "AppGrant" TO app_participant;
-CREATE SCHEMA IF NOT EXISTS roles AUTHORIZATION app_participant;
-ALTER SCHEMA roles OWNER TO app_participant;
-```
+ロールが無いときだけ、このパスワードで `CREATE ROLE` します。ロールが既にあるときはパスワードを変えません。環境変数を変えても、既存のパスワードと参加アプリの `DATABASE_URL` はそのままです。パスワードを変えるときは、データベースで `ALTER ROLE app_participant PASSWORD '...'` を実行し、参加アプリの `DATABASE_URL` も同じ値に変えます。Redis の `PARTICIPANT_REDIS_PASSWORD` とは別の値です。
 
-付与するのは次だけです。`User` は `id`、`email`、`name`、`role`、`disabledAt`。`WebAuthnCredential` は `id`、`userId`。`App` と `AppGrant` は全列の `SELECT` です。`User.password`、パスキーの公開鍵、カウンタ、`credentialId`、`transports` は付与しません。
+接続ユーザーに `CREATEROLE` が無いときは、環境変数が設定されている場合に起動を失敗させます。
 
-`GRANT app_participant TO CURRENT_USER` は、実行中のユーザーがスキーマの所有者を `app_participant` にできるようにするためです。
+毎回付け直す権限は次です。`User` は `id`、`email`、`name`、`role`、`disabledAt`。`WebAuthnCredential` は `id`、`userId`。`App` と `AppGrant` は全列の `SELECT` です。`User.password`、パスキーの公開鍵、カウンタ、`credentialId`、`transports`、`RoleChange` は付与しません。`CONNECT` と、スキーマ `public` の `USAGE` も付与します。データベースへの `CREATE` は付与しません。
 
-## 参加アプリの起動
+列名を変えるマイグレーションは、この列一覧と同じ変更に含めます。一覧が古いと、次回の認証サーバー起動が権限付与で失敗します。
 
-スキーマの所有者は `app_participant` です。その中の型とテーブルは、参加アプリの接続で作ります。`public` の共有テーブルには書きません。
+`GRANT app_participant TO CURRENT_USER` も毎回実行します。実行中のユーザーが、スキーマの所有者を `app_participant` にできるようにするためです。
 
-マイグレーションの前に、接続ユーザーが `app_participant` であること、スキーマ `roles` がありそのユーザーがテーブルを作れること、失敗したマイグレーション記録が無いことを確認します。満たさないときはマイグレーションを始めずにプロセスを終了します。満たすときはコンテナの起動時に適用します。そのときだけ接続の `schema` を `roles` にし、履歴テーブルを `roles."_prisma_migrations"` に作ります。アプリの `DATABASE_URL` は `schema=public` のままです。適用済みなら何もしません。失敗したらプロセスを終了し、サーバーは待ち受けません。ビルド時には適用しません。
+## スキーマ
 
-失敗した記録が `roles."_prisma_migrations"` に残っているときは、未完了の行を消してから参加アプリを起動します。`public."_prisma_migrations"` は認証サーバーの履歴なので消しません。
+参加アプリは、業務テーブル用のスキーマを1つ持ちます。見本の名前は `roles` です。別の参加アプリは、自分で決めた1つの名前を使います。
 
-ロール見本で、既に古いマイグレーションを適用したローカルデータベースがあるときは、スキーマ `roles` だけを削除してから、上の SQL のスキーマ作成を実行し、参加アプリを起動し直します。`public` の共有テーブルには触れません。
+起動時、接続ユーザーが `app_participant` であることを確認したあと、`public.create_participant_schema` にその名前を渡します。関数は認証サーバーのデータベースユーザー権限で動きます。未作成ならそのスキーマを作り、所有者を `app_participant` にします。所有者が `app_participant` なら何もしません。別の所有者なら失敗します。`public`、`information_schema`、`pg_` で始まる名前は拒否します。
+
+関数の実行権限は `app_participant` だけです。引数の検証を誤ると、参加アプリの接続から認証サーバーのデータベースユーザー権限で SQL を実行できます。
+
+全参加アプリが同じロールなので、作られたスキーマはどの参加アプリからも使えます。同じ名前を別のアプリが渡すと、関数は既存と判断し、そのアプリのマイグレーションが同じスキーマへ入ります。認証サーバーは名前の重複を拒否できません。
+
+関数のあと、スキーマがありそのユーザーがテーブルを作れること、失敗したマイグレーション記録が無いことを確認します。満たさないときはマイグレーションを始めずにプロセスを終了します。満たすときはコンテナの起動時に適用します。そのときだけ接続の `schema` をそのスキーマにし、履歴テーブルをそのスキーマの `"_prisma_migrations"` に作ります。アプリの `DATABASE_URL` は `schema=public` のままです。適用済みなら何もしません。失敗したらプロセスを終了し、サーバーは待ち受けません。ビルド時には適用しません。
+
+失敗した記録が残っているときは、未完了の行を消してから参加アプリを起動します。`public."_prisma_migrations"` は認証サーバーの履歴なので消しません。
+
+ロール見本で、既に古いマイグレーションを適用したローカルデータベースがあるときは、スキーマ `roles` だけを削除してから参加アプリを起動し直します。`public` の共有テーブルには触れません。

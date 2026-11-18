@@ -39,6 +39,7 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/astro_webauthn?schem
 TEST_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/astro_webauthn_test?schema=public"
 REDIS_URL="redis://localhost:6379/"
 PARTICIPANT_REDIS_PASSWORD="participant-redis-local"
+PARTICIPANT_DB_PASSWORD="participant-pg-local"
 APP_URL="http://auth.localhost:3000"
 APP_ID="auth"
 PARENT_DOMAIN="localhost"
@@ -50,7 +51,7 @@ SEED_ADMIN_EMAIL="admin@example.com"
 SEED_ADMIN_PASSWORD="admin-change-me"
 ```
 
-`DATABASE_URL` は読み書きできるユーザーのままです。参加アプリ用ロールには切り替えません。`PARTICIPANT_REDIS_PASSWORD` は、参加アプリ共通の Redis ユーザー `app_participant` のパスワードです。未設定のときは、このユーザーを作りません。PostgreSQL の `app_participant` のパスワードとは別の値にします。`REDIS_KEY_PREFIX` を付けるときは、参加アプリも同じ値にします。未設定のままが、この手順の既定です。
+`DATABASE_URL` は読み書きできるユーザーのままです。参加アプリ用ロールには切り替えません。`PARTICIPANT_REDIS_PASSWORD` は、参加アプリ共通の Redis ユーザー `app_participant` のパスワードです。未設定のときは、このユーザーを作りません。`PARTICIPANT_DB_PASSWORD` は、PostgreSQL のロール `app_participant` のパスワードです。未設定のときは、このロールを作りません。二つのパスワードは別の値にします。`REDIS_KEY_PREFIX` を付けるときは、参加アプリも同じ値にします。未設定のままが、この手順の既定です。
 
 ## 3. 認証サーバーのデータベース
 
@@ -63,13 +64,13 @@ pnpm db:seed
 
 `pnpm db:seed` は、認証サーバー自身の `App` 行を用意します。管理者は User が 0 件のときだけ作り、`AppGrant` は付けません。
 
-共有テーブルができたあと、参加アプリ用のロールとスキーマを一度用意します。手順は [db-init.md](./db-init.md) です。開発用のデータベース名は `astro_webauthn`、`app_participant` のパスワードは `participant-pg-local`、ロール見本のスキーマは `roles` です。SQL は、同じデータベースへ読み書きできるユーザーで実行します。
+共有テーブルができたあと、参加アプリ用のロールとスキーマ作成関数を一度用意します。手順は [db-init.md](./db-init.md) です。開発用のデータベース名は `astro_webauthn`、`app_participant` のパスワードは `participant-pg-local`、ロール見本のスキーマは `roles` です。スキーマは参加アプリの起動時に作られます。
 
 ```bash
-docker compose -f docker-compose.db.yaml exec postgres psql -U postgres -d astro_webauthn
+pnpm db:participant-role
 ```
 
-このロールは認証サーバーの起動処理では作りません。共有テーブルを作り直したあとは、参照権限の付与を再実行します。
+`pnpm dev` はこのコマンドを実行しません。共有テーブルを作り直したあとは、同じコマンドで参照権限の付与を再実行します。ロールが既にあるときはパスワードを変えません。
 
 ## 4. 認証サーバーの起動
 

@@ -126,7 +126,7 @@ seed 管理者: 初期パスワードログイン → パスキー必須登録 �
 
 アプリ内ロールの割り当ては、そのアプリのスキーマに `User.id` をキーとして置く。認証サーバーの `AppGrant` には書かない。ロール定義は、最初はアプリ内の固定設定でよい。あるアプリの変更が、別のアプリのロールに影響してはならない。
 
-共有テーブルの参照は、参加アプリ共通のログインロール `app_participant` の `SELECT` で行う。このロールでは共有テーブルを作成しない。固有テーブルへの書き込みは、そのアプリのスキーマにだけ与える。ロールとスキーマは、管理者が認証サーバーのデータベースで一度だけ用意する。起動処理では作らない。手順は [db-init.md](./db-init.md) と [redis.md](./redis.md) の「参加アプリの接続権限」に従う。
+共有テーブルの参照は、参加アプリ共通のログインロール `app_participant` の `SELECT` で行う。このロールでは共有テーブルを作成しない。固有テーブルへの書き込みは、そのアプリのスキーマにだけ与える。ロール、参照権限、スキーマ作成関数は、認証サーバーが `PARTICIPANT_DB_PASSWORD` を設定しているとき、共有テーブルのマイグレーション後に用意する。未設定なら作らない。参加アプリのスキーマは、そのアプリの起動時に `public.create_participant_schema` で作る。手順は [db-init.md](./db-init.md) と [redis.md](./redis.md) の「参加アプリの接続権限」に従う。
 
 ## データモデル
 
@@ -224,6 +224,7 @@ Session / Invite / Reset / Magic のトークンは、平文のまま Cookie・U
 - `REDIS_URL`（本番必須、既定 `redis://localhost:6379/`。認証サーバーは読み書きできるユーザー）
 - `REDIS_KEY_PREFIX`（任意）
 - `PARTICIPANT_REDIS_PASSWORD`（任意。設定時、プロセス起動後の最初のリクエストで参加アプリ共通の Redis ユーザー `app_participant` を用意する。未設定なら作らない。手順と `SET` を与えない理由は [redis.md](./redis.md)）
+- `PARTICIPANT_DB_PASSWORD`（任意。設定時、共有テーブルのマイグレーション後に PostgreSQL のロール `app_participant`、参照権限、スキーマ作成関数を用意する。未設定なら作らない。パスワードはロールが無いときだけ設定する。手順は [db-init.md](./db-init.md)）
 - `SESSION_MAX_AGE_SECONDS`（任意、既定 `2592000`）
 - `WEBAUTHN_RP_ID` / `WEBAUTHN_RP_NAME` / `WEBAUTHN_ORIGIN`（開発既定は RP ID `auth.localhost`、RP 名 `認証サーバー`、オリジン `http://auth.localhost:3000`。RP ID は認証サーバーのホスト名）
 - `APP_URL`（開発既定 `http://auth.localhost:3000`。本番では `WEBAUTHN_ORIGIN` と origin が一致すること）
@@ -234,7 +235,7 @@ Session / Invite / Reset / Magic のトークンは、平文のまま Cookie・U
 - `DB_LOG_LEVEL`（任意。`silent` / `error` / `warn` / `info` / `query`。未設定は本番 `warn`、開発 `query`）
 - `RUN_SEED`（任意。`true` のとき起動時にシード。User が空のときだけ管理者を作成。本番では `SEED_ADMIN_PASSWORD` に既定値以外が必要）
 
-詳細は [redis.md](./redis.md)。参加アプリ用の PostgreSQL ロールと Redis ACL ユーザーの作成手順は、同ファイルの「参加アプリの接続権限」です。
+詳細は [redis.md](./redis.md)。参加アプリ用の PostgreSQL ロールの手順は [db-init.md](./db-init.md)、Redis ACL ユーザーの手順は [redis.md](./redis.md) の「参加アプリの接続権限」です。
 
 ## セキュリティ上の必須事項
 

@@ -9,6 +9,12 @@
 --   ACL SETUSER app_participant reset on >password (~sess:* +get +expire +del) (~handoff:* +get +getdel +del) (~sess:user:* +srem +smembers +del)
 -- 認証サーバーは PARTICIPANT_REDIS_PASSWORD があるとき、起動のたびにこのユーザーを上書きする。
 -- 未設定なら作らない。参加アプリの REDIS_URL は redis://app_participant:<password>@host:6379/
+--
+-- PostgreSQL の app_participant は PARTICIPANT_DB_PASSWORD があるとき、
+-- 共有テーブルのマイグレーション後に用意する。未設定なら作らない。
+-- パスワードはロールが無いときだけ設定する。再起動では変えない。
+-- スキーマは参加アプリが public.create_participant_schema(名前) で作る。
+-- データベースへの CREATE は付与しない。RoleChange は付与しない。
 
 -- CREATE ROLE app_participant LOGIN PASSWORD 'replace-me';
 -- GRANT CONNECT ON DATABASE your_database TO app_participant;
