@@ -45,9 +45,7 @@ echo "✅ Database connected"
 
 # Prismaマイグレーションの実行
 echo "🔄 Running migrations..."
-pnpm prisma migrate deploy > /dev/null 2>&1
-
-if [ $? -eq 0 ]; then
+if pnpm prisma migrate deploy; then
     echo "✅ Migrations completed"
     echo "🔐 Ensuring participant role..."
     if node dist/ensure-participant-role.mjs; then
@@ -58,7 +56,6 @@ if [ $? -eq 0 ]; then
     fi
 else
     echo "❌ Migration failed"
-    pnpm prisma migrate deploy 2>&1
     exit 1
 fi
 
