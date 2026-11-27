@@ -29,7 +29,7 @@ minimumReleaseAgeExclude:
   - '@vitest/mocker@5.0.1 || 5.0.3 || 5.0.4'
   - '@vitest/spy@5.0.1 || 5.0.3 || 5.0.4'
   - vitest@5.0.1 || 5.0.3 || 5.0.4
-  - eslint-plugin-astro@3.2.0 || 3.2.1
+  - eslint-plugin-astro@3.2.0 || 3.2.1 || 3.2.2
   - prettier@3.9.7 || 3.9.8 || 3.9.9 || 3.10.0 || 3.10.1
   - dotenv@18.0.0 || 18.0.1 || 18.0.2 || 18.0.3 || 18.0.5 || 18.0.6 || 18.0.7 || 18.0.9
   - prettier-plugin-astro@1.0.1 || 1.1.0 || 1.1.1
@@ -37,7 +37,7 @@ minimumReleaseAgeExclude:
   - eslint@10.11.0
   - '@astrojs/markdown-satteri@0.4.2 || 0.4.3 || 0.4.9'
   - astro-eslint-parser@3.2.0
-  - hono@4.13.9 || 4.13.10 || 4.13.12 || 4.13.14 || 4.13.17 || 4.13.18
+  - hono@4.13.9 || 4.13.10 || 4.13.12 || 4.13.14 || 4.13.17 || 4.13.18 || 4.13.23
   - pg-cloudflare@1.4.1
   - pg-connection-string@2.14.1
   - globals@17.13.0
